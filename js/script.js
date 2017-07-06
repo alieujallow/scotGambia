@@ -978,21 +978,31 @@ function addOtherSection()
 //                          MANAGING APARTMENT
 //********************************************************************
 
-//adds a staff to the systme
-function manageApartment(formId,action)
+//adds an apartment to the system
+function manageApartment(formName,action)
 {
     //jquery ajax
     var form_data = new FormData();  
 
     //collecting form data
-    form_data.append('name',   $(formId +" input[name=name]").val());
-    form_data.append('houseType',  $(formId +" select[name=house_type]").val());
-    form_data.append('condition',    $(formId +" select[name=condition]").val());
-    form_data.append('location',  $(formId +" select[name=location]").val());
-    form_data.append('propertyType', $(formId +" select[name=property_type]").val());
-    form_data.append('propertyStatus', $(formId +" select[name=property_status]").val());
-    form_data.append('price',  $(formId +" input[name=price]").val());
-    form_data.append('numberOfBedrooms', $(formId +" input[name=number_of_bedrooms]").val());
+    var houseType=document.forms[formName]["house_type"].value;
+    var condition=document.forms[formName]["condition"].value;
+    var propertyType=document.forms[formName]["property_type"].value;
+    var propertyStatus=document.forms[formName]["property_status"].value;
+    var location=document.forms[formName]["location"].value;
+    var price=document.forms[formName]["price"].value;
+    var name=document.forms[formName]["name"].value;
+    var numberOfBedrooms=document.forms[formName]["number_of_bedrooms"].value;
+
+    //appending the form data
+    form_data.append('name',name);
+    form_data.append('houseType',houseType);
+    form_data.append('condition',condition);
+    form_data.append('location',location);
+    form_data.append('propertyType',propertyType);
+    form_data.append('propertyStatus',propertyStatus);
+    form_data.append('price',price);
+    form_data.append('numberOfBedrooms',numberOfBedrooms);
     form_data.append('action',action);
 
     var c=0;
@@ -1006,26 +1016,9 @@ function manageApartment(formId,action)
       }
         c++;
     }); 
-
-
-
-
-
-
-
-
-    /*var files = $('#picture_picker').prop('files');
-    $.each(files, function(i, file)
-     {
-      form_data.append("file_"  + i, file);
-     });*/
-
-
-    //var file_data = $('#picture_picker').prop('files');  
-    //form_data.append('images', file_data);
-         
+      
     $.ajax({
-      url: "../controllers/staffController.php?", 
+      url: "../controllers/apartmentController.php?", 
       type: "POST",            
       data: form_data, 
       dataType: 'text',
@@ -1074,257 +1067,186 @@ function printAddStaffResponse(xhttp)
 
 }
 
-//get staff info
-function getStaffInfo()
+//get apartment information
+function getApartmentInfo()
 {
   //sets the url
-  url="controllers/staffController.php?staff_info=all";
+  url="../controllers/apartmentController.php?apartment_info=all";
 
   //calls the ajax function
-  ajax(url, printStaffInfo);
+  ajax(url, printApartmentInfo);
 }
 
-//prints staff info
-function printStaffInfo(xhttp)
+//prints apartment info
+function printApartmentInfo(xhttp)
 {
   var rows = JSON.parse(xhttp.responseText);
-  var staffList = document.getElementById("staffInfo");
-  //clears the staff list before printing
-  staffList.innerHTML="";
+
+  var apartmentList = document.getElementById("apartmentList");
+  //clears the apartment list before printing
+  apartmentList.innerHTML="";
 
   //prints the number of rows
-  document.getElementById("searchResult").innerHTML="Record(s): "+rows[0];
+  //document.getElementById("searchResult").innerHTML="Record(s): "+rows[0];
 
   for (var i =1; i<rows.length; i++)
   {
     var record = rows[i];
 
-    //creates a staff card
-    var staffCard= document.createElement('div');
-    staffCard.setAttribute("class","staff_card");
-    staffCard.setAttribute("id",record["id"]);
-    staffCard.addEventListener("click", function()
+    //creates an apartment card
+    var apartmentCard= document.createElement('div');
+    apartmentCard.setAttribute("class","apartmentCard");
+    apartmentCard.setAttribute("id",record["apartment_id"]);
+    apartmentCard.addEventListener("click", function()
     {
-        getStaffId(this.id);
+        getApartmentId(this.id);
     });
-
-    //creates a row
-    var row= document.createElement('div');
-    row.setAttribute("class","row");
-
-    //creates column
-    var column= document.createElement('div');
-    column.setAttribute("class","col-md-12");
-
-    //creates staff info container
-    var staffInfoContainer= document.createElement('div');
-    staffInfoContainer.setAttribute("id","staff_info_container");
-
-    //creates staff pic container
-    var staffPicContainer= document.createElement('div');
-    staffPicContainer.setAttribute("id","staff_pic_container");
     
-    //creates the ul element
-    var ul = document.createElement('ul');
-    //sets the id to the ul element
-    ul.setAttribute("id","staff_info");
-
-    // Creates the li element
-    var first_name_li = document.createElement('li');
-    //creates the span element
-    var span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","label");
-    //sets the value of the span
-    span.innerHTML="First Name: ";
-    first_name_li.appendChild(span);
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","value");
-    span.setAttribute("id","staff_first_name");
-    //sets the value of the span
-    span.innerHTML=record["first_name"];
-    first_name_li.appendChild(span);
-
-
-    // Creates the li element
-    middle_name_li = document.createElement('li');
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","label");
-    //sets the value of the span
-    span.innerHTML="Middle Name: ";
-    middle_name_li.appendChild(span);
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","value");
-    span.setAttribute("id","staff_middle_name");
-    //sets the value of the span
-    span.innerHTML=record["middle_name"];
-    middle_name_li.appendChild(span);
-
-    // Creates the li element
-    last_name_li = document.createElement('li');
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","label");
-    //sets the value of the span
-    span.innerHTML="Last Name: ";
-    last_name_li.appendChild(span);
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","value");
-    span.setAttribute("id","staff_last_name");
-    //sets the value of the span
-    span.innerHTML=record["last_name"];
-    last_name_li.appendChild(span);
-
-    // Creates the li element
-    designation_li = document.createElement('li');
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","label");
-    //sets the value of the span
-    span.innerHTML="Designation: ";
-    designation_li.appendChild(span);
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","value");
-    span.setAttribute("id","designation");
-    //sets the value of the span
-    span.innerHTML=record["designation"];
-    designation_li.appendChild(span);
-
-    // Creates the li element
-    gender_li= document.createElement('li');
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","label");
-    //sets the value of the span
-    span.innerHTML="Gender: ";
-    gender_li.appendChild(span);
-    //creates the span element
-    span = document.createElement('span');
-    //sets the class to the span element
-    span.setAttribute("class","value");
-    span.setAttribute("id","gender");
-    //sets the value of the span
-    span.innerHTML=record["gender"];
-    gender_li.appendChild(span);
+    //creates a row for the apartment image
+    var imageRow= document.createElement('div');
+    imageRow.setAttribute("class","row apartment_image_div");
 
     //creates an image
     var image= document.createElement('img');
+    image.setAttribute("src","../img/apartment_uploads/"+record["picture"]);
 
-    if (record["profile_pic"]=="")
-    {
-      //sets the attribute of the image if the profile pic is empty
-      image.setAttribute("src","img/placeHolder.jpg");
-    }
-    else
-    {
-      //sets the attribute of the image
-      image.setAttribute("src","img/profile_pic/"+record["profile_pic"]);
-    }
-    image.setAttribute("class","img-circle img-responsive");
-    image.setAttribute("width","90");
-    image.setAttribute("height","90");
+    //creates a row for the partment information
+    var informationRow= document.createElement('div');
+    informationRow.setAttribute("class","row apartment_information_div");
 
-    ul.appendChild(first_name_li);
-    ul.appendChild(middle_name_li);
-    ul.appendChild(last_name_li);
-    ul.appendChild(designation_li);
-    ul.appendChild(gender_li);
+    //creates a table
+    var table = document.createElement('table');
+    table.setAttribute("class","apartment_information_table");
 
-    staffInfoContainer.appendChild(ul);
-    staffPicContainer.appendChild(image);
-    column.appendChild(staffInfoContainer);
-    column.appendChild(staffPicContainer);
-    row.appendChild(column);
-    staffCard.appendChild(row);
-    staffList.appendChild(staffCard);
+    //creates table row 1
+    var tableRow1 = document.createElement('tr');
+   
+   //creates table data
+   var tableData = document.createElement('td');
+   var text = document.createTextNode("Name"); 
+   tableData.appendChild(text);
+   tableRow1.appendChild(tableData);
+
+   tableData = document.createElement('td');
+   text = document.createTextNode(record["apartment_name"]); 
+   tableData.appendChild(text);
+   tableRow1.appendChild(tableData);
+
+   //creates table row 2
+   var tableRow2 = document.createElement('tr');
+   
+   //creates table data
+   tableData = document.createElement('td');
+   text = document.createTextNode("Price"); 
+   tableData.appendChild(text);
+   tableRow2.appendChild(tableData);
+
+   tableData = document.createElement('td');
+   text = document.createTextNode(record["price"]); 
+   tableData.appendChild(text);
+   tableRow2.appendChild(tableData);
+
+   //creates table row 3
+   var tableRow3 = document.createElement('tr');
+   
+   //creates table data
+   tableData = document.createElement('td');
+   text = document.createTextNode("Condition"); 
+   tableData.appendChild(text);
+   tableRow3.appendChild(tableData);
+
+   tableData = document.createElement('td');
+   text = document.createTextNode(record["condition_name"]); 
+   tableData.appendChild(text);
+   tableRow3.appendChild(tableData);
+
+   //creates table row 4
+   var tableRow4 = document.createElement('tr');
+   
+   //creates table data
+   tableData = document.createElement('td');
+   text = document.createTextNode("Location"); 
+   tableData.appendChild(text);
+   tableRow4.appendChild(tableData);
+
+   tableData = document.createElement('td');
+   text = document.createTextNode(record["location_name"]); 
+   tableData.appendChild(text);
+   tableRow4.appendChild(tableData);
+
+   //creates table row 5
+   var tableRow5 = document.createElement('tr');
+   
+   //creates table data
+   tableData = document.createElement('td');
+   text = document.createTextNode("#bedrooms"); 
+   tableData.appendChild(text);
+   tableRow5.appendChild(tableData);
+
+   tableData = document.createElement('td');
+   text = document.createTextNode(record["number_of_bedrooms"]); 
+   tableData.appendChild(text);
+   tableRow5.appendChild(tableData);
+
+   table.appendChild(tableRow1);
+   table.appendChild(tableRow2);
+   table.appendChild(tableRow3);
+   table.appendChild(tableRow4);
+   table.appendChild(tableRow5);
+
+   informationRow.appendChild(table);
+   imageRow.appendChild(image);
+
+   apartmentCard.appendChild(imageRow);
+   apartmentCard.appendChild(informationRow);
+
+   apartmentList.appendChild(apartmentCard);
   }
 }
 
-function getStaffId(id)
+function getApartmentId(id)
 {
   //sets the url 
-  url = "controllers/staffController.php?staffId="+id;
+  url = "../controllers/apartmentController.php?apartmentId="+id;
 
   //calls the ajax function
-  ajax(url, storeStaffId);
+  ajax(url, storeApartmentId);
 }
 
 //prints the staff profile
-function storeStaffId(xhttp)
+function storeApartmentId(xhttp)
 {
   var response = xhttp.responseText;
-  if (response == "staff_id_stored") 
+  if (response == "apartment_id_stored") 
   {
-     window.location.href="pages/profile.html";
+     window.location.href="../pages/apartmentInfo.html";
   }
 }
 
-//gets the profile information of a staff
-function getStaffProfileInformation()
+//gets the information of an apartment
+function getApartmentProfileInformation()
 {
   //sets the url
-  url = "../controllers/staffController.php?staff_profile_information=all";
+  url = "../controllers/apartmentController.php?apartment_profile_information=all";
 
   //calls the ajax function
-  ajax(url, printStaffProfileInformation);
+  ajax(url, printApartmentProfileInformation);
 }
 
 //prints the staff profile information
-function printStaffProfileInformation(xhttp)
+function printApartmentProfileInformation(xhttp)
 {
-  var data = JSON.parse(xhttp.responseText);
-  var staffRow = data[0];
-  var unit = data[1];
-  var region= data[2];
-  var $qualification= data[3];
-  var $otherSection= data[4];
-
-  var staffInfo = staffRow[1];
-  var unitInfo = unit[1];
-  var regionInfo= region[1];
-  var $qualificationInfo = $qualification[1];
-  var $otherSectionInfo = $otherSection[1];
-
-  document.getElementById('fname').innerHTML=staffInfo['first_name'];
-  document.getElementById('mname').innerHTML=staffInfo['middle_name'];
-  document.getElementById('lname').innerHTML=staffInfo['last_name'];
-  document.getElementById('dob').innerHTML=staffInfo['date_of_birth'];
-  document.getElementById('gen').innerHTML=staffInfo['gender'];
-  document.getElementById('addr').innerHTML=staffInfo['address'];
-  document.getElementById('em').innerHTML=staffInfo['email'];
-  document.getElementById('tel').innerHTML=staffInfo['tel'];
-  document.getElementById('doa').innerHTML=staffInfo['date_of_appointment'];
-  document.getElementById('Pnumber').innerHTML=staffInfo['payroll_number'];
-  document.getElementById('gr').innerHTML=staffInfo['grade'];
-  document.getElementById('desig').innerHTML=staffInfo['designation'];
-
-  if (staffInfo['profile_pic']=="")
-  {
-    document.getElementById('profile_picture_view').src="../img/placeHolder.jpg";
-  }
-  else
-  {
-    document.getElementById('profile_picture_view').src="../img/profile_pic/"+staffInfo['profile_pic'];
-  }
-  document.getElementById('qual').innerHTML=$qualificationInfo['name'];
-  document.getElementById('re').innerHTML=regionInfo['name'];
-  document.getElementById('uni').innerHTML=unitInfo['name'];
-  document.getElementById('other').innerHTML=$otherSectionInfo['name'];
-  var editBtn = document.getElementsByName('editBtn');
-  editBtn[0].id= staffInfo['id'];
+  var apartmentRecord = JSON.parse(xhttp.responseText);
+  apartmentRecord=apartmentRecord[1];
+  document.getElementById('propertyName').innerHTML=apartmentRecord['apartment_name'];
+  document.getElementById('houseType').innerHTML=apartmentRecord['house_type'];
+  document.getElementById('propertyCondition').innerHTML=apartmentRecord['condition_name'];
+  document.getElementById('propertyLocation').innerHTML=apartmentRecord['location_name'];
+  document.getElementById('propertyType').innerHTML=apartmentRecord['property_type'];
+  document.getElementById('propertyStatus').innerHTML=apartmentRecord['property_status'];
+  document.getElementById('price').innerHTML=apartmentRecord['price'];
+  document.getElementById('numberOfBedrooms').innerHTML=apartmentRecord['number_of_bedrooms'];
+  document.getElementById('apartmentMainImage').src="../img/apartment_uploads/"+apartmentRecord['picture'];
 }
 //**********************************************************************
 //                  Managing Editing a Staff Profile
@@ -1533,14 +1455,52 @@ function resetChangeUsernameForm()
 function loginUser()
 {
   //collects the user credentials
-  var username = document.forms["loginForm"]["username"].value;
+  /*var username = document.forms["loginForm"]["username"].value;
   var password = document.forms["loginForm"]["password"].value;
 
   //sets the url for the ajax call
   url = "../unsecure/unsecureProcessing.php?username="+username+"&password="+password+"&login=yes";
 
   //calls the ajax function
-  ajax(url, printLoginUserResponse);
+  ajax(url, printLoginUserResponse);*/
+
+  var form_data = new FormData();  
+
+  //collecting form data
+  form_data.append('username',   $("#loginForm input[name=username]").val());
+  form_data.append('password',   $("#loginForm input[name=password]").val());
+  form_data.append('login','yes');
+
+  $.ajax({
+      url: "../unsecure/unsecureProcessing.php",
+      type: "POST",            
+      data: form_data, 
+      dataType: 'text',
+      contentType: false,       
+      cache: false,             
+      processData:false,        
+      success: function(data)   
+      {
+          if (data=="wrong username") 
+          {
+            document.getElementById("usernameSpan").innerHTML = data;
+            document.getElementById("password").value ="";
+          }
+          else if(data=="wrong password")
+          {
+            document.getElementById("passwordSpan").innerHTML = data;
+            document.getElementById("password").value ="";
+          }
+          else if (data=="connection_error" || data=="query_error")
+          {
+            document.getElementById("errorSpan").innerHTML = data;
+          }
+          else if (data=="success")
+          {
+            window.location.href = "../pages/";
+          }
+      }
+    });
 
 }
 

@@ -22,9 +22,9 @@
     <link href="../css/style1.css" rel="stylesheet">
 
   </head>
-  <body  id="page-top" data-spy="scroll" data-target=".navbar-custom" onload="getApartmentInfo()">
+  <body  id="page-top" data-spy="scroll" data-target=".navbar-custom" onload="getApartmentProfileInformation()">
 
-  <!-- Navigation -->
+  <!-- NAVIGATION BEGINS-->
   <div id="navigation">
     <nav class="navbar navbar-custom" role="navigation">
       <div class="container">
@@ -75,103 +75,106 @@
       <!-- /.container -->
     </nav>
   </div> 
-  <!-- /Navigation -->  
+  <!-- NAVIGATION ENDS-->
 
 <div class="container">
-  <div id="listContainer">
+
+  <!--row for image and apartment information-->
+  <div class="row"><br>
+    <!-- column for image-->
+    <div class="col-md-4">
+      <img src="" id="apartmentMainImage">
+    </div>
+
+    <!--column for apartment iformation-->
+    <div class="col-md-8">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td>Name:</td>
+            <td id="propertyName"></td>
+          </tr>
+          <tr>
+            <td>House Type:</td>
+            <td id="houseType"></td>
+          </tr>
+          <tr>
+            <td>condition:</td>
+            <td id="propertyCondition"></td>
+          </tr>
+          <tr>
+            <td>location:</td>
+            <td id="propertyLocation"></td>
+          </tr>
+          <tr>
+            <td>Property Type:</td>
+            <td id="propertyType"></td>
+          </tr>
+          <tr>
+            <td>Property Status:</td>
+            <td id="propertyStatus"></td>
+          </tr>
+          <tr>
+            <td>Price:</td>
+            <td id="price"></td>
+          </tr>
+          <tr>
+            <td>Number of bedrooms:</td>
+            <td id="numberOfBedrooms"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div><br>
+
+  <!--row for apartment gallery-->
+  <div class="row">
+    <div id="listContainer">
     <ul class="nav nav-tabs" role="tablist">
       <li class="active" role="presentation">
-        <a href="#rentals" aria-controls="home" role= "tab" data-toggle="tab" >Rentals</a>
+        <a href="#propertyDetails" aria-controls="home" role= "tab" data-toggle="tab" >Property Details</a>
       </li>
       <li role="presentation">
-        <a href="#sales" aria-controls="home" role= "tab" data-toggle="tab" >Sales</a>
+        <a href="#location" aria-controls="home" role= "tab" data-toggle="tab" >Location</a>
+      </li>
+      <li role="presentation">
+        <a href="#enquiryForm" aria-controls="home" role= "tab" data-toggle="tab" >Enquiry Form</a>
+      </li>
+      <li role="presentation">
+        <a href="#gallery" aria-controls="home" role= "tab" data-toggle="tab" >Gallery</a>
       </li>
     </ul>
   </div>
-  <!-- Tab panes -->
+
+   <!-- Tab panes -->
   <div class="tab-content">
 
-    <div role="tabpanel" class="tab-pane active" id="rentals">
-        <div></div><br>
-
-        <!-- apartment list -->
-        <div id="apartmentList"></div>
+    <div role="tabpanel" class="tab-pane active" id="propertyDetails">
+      <h1>Property Details</h1>
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="sales">
-       <h1>POST A CAR OR APPARTMENT INFORMATION</h1>
+    <div role="tabpanel" class="tab-pane" id="location">
+       <h1>Location</h1>
     </div>
 
-    <!-- settings tab pane -->
-    <div role="tabpanel" class="tab-pane" id="settings">
-      <div></div><br>
-    <div class="row">
-     <div class="panel panel-success col-md-4">
-      <div class="panel-heading">Change Password</div>
-      <div class="panel-body">
-        <form name="change_password_form" onsubmit="return validateChangePasswordForm()" action="" method="GET" id="change_password_form">
-          <div class="form-group">
-            <label>Current Password</label>
-            <input type="password" class="form-control" id="current_password" placeholder="Current Password" name="current_password">
-            <span id="current_password_span" style="color: red;"></span>
-          </div>
-          <div class="form-group">
-            <label>New Password</label>
-            <input type="password" class="form-control" id="new_password" placeholder="New Password" name="new_password">
-            <span id="new_password_span" style="color: red;"></span>
-          </div>
-          <div class="form-group">
-            <label>Confirm Password</label>
-            <input type="password" class="form-control" id="confirm_password" placeholder="Confirm Password" name="confirm_password">
-            <span id="confirm_password_span" style="color: red;"></span>
-          </div>
-            <span id="passwordsNotEqualSpan" style="color: red;"></span>
-            <button type="submit" class="btn btn-success form-control">Save</button> 
-        </form>
-      </div>
-       <div class="panel-body">
-        <form name="change_password_form" onsubmit="return validateChangePasswordForm()" action="" method="GET" id="change_password_form">
-          <div class="form-group">
-            <label>Current Password</label>
-            <input type="password" class="form-control" id="current_password" placeholder="Current Password" name="current_password">
-            <span id="current_password_span" style="color: red;"></span>
-          </div>
-          <div class="form-group">
-            <label>New Password</label>
-            <input type="password" class="form-control" id="new_password" placeholder="New Password" name="new_password">
-            <span id="new_password_span" style="color: red;"></span>
-          </div>
-          <div class="form-group">
-            <label>Confirm Password</label>
-            <input type="password" class="form-control" id="confirm_password" placeholder="Confirm Password" name="confirm_password">
-            <span id="confirm_password_span" style="color: red;"></span>
-          </div>
-            <span id="passwordsNotEqualSpan" style="color: red;"></span>
-            <button type="submit" class="btn btn-success form-control">Save</button> 
-        </form>
-      </div>
-    </div>
-    <div class="panel panel-success col-md-4">
-      <div class="panel-heading">Change Username</div>
-      <div class="panel-body">
-        <form name="change_username_form" onsubmit="return validateChangeUsernameForm()" action="" method="GET" id="change_username_form">
-          <div class="form-group">
-            <label>Username</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter New Username" name="username">
-            <span id="change_username_span" style="color: red;"></span>
-          </div>
-            <button type="submit" class="btn btn-success form-control">Save</button> 
-        </form>
-      </div>
-    </div>
-    </div>
+    <div role="tabpanel" class="tab-pane" id="enquiryForm">
+       <h1>Enquiry Form</h1>
     </div>
 
-     <!-- setup tab pane -->
-    <div role="tabpanel" class="tab-pane" id="dbSetup"> 
-         <h1>ACCEPT OR REJECT REQUESTS</h1>
+    <div role="tabpanel" class="tab-pane" id="gallery"> 
+         <h1>Gallery</h1>
     </div>
-    </div>
+
+  </div>
+
+
+
+
+
+</div>
+
+ 
     </div><br>
 
   <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="staff_modal">
@@ -206,7 +209,6 @@
 
     <!-- Core JavaScript Files -->
     <script src="../js/jquery.min.js"></script>   
-    <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.sticky.js"></script>
     <script src="../js/jquery.flexslider-min.js"></script>
     <script src="../js/jquery.easing.min.js"></script> 
@@ -217,13 +219,11 @@
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/nivo-lightbox.min.js"></script>
     <script src="../js/custom.js"></script>
-    <script type="text/javascript" src="../js/script.js"></script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../js/script.js"></script>
-    <script type="text/javascript" src="../layout/header.js"></script>
   </body>
 </html>

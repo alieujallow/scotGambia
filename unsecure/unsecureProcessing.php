@@ -3,18 +3,18 @@
 require_once('../database/dbConnection.php');
 
 //PROCESSING USER LOGIN
-if (isset($_GET['login']) & !empty($_GET['login']))
+if (isset($_POST['login']) & !empty($_POST['login']))
 {
 	//checks for the username
-	if (isset($_GET['username']) & !empty($_GET['username']))
+	if (isset($_POST['username']) & !empty($_POST['username']))
 	{
-		$username = $_GET['username'];
+		$username = $_POST['username'];
 	}
 
 	//checks for the password
-	if (isset($_GET['password']) & !empty($_GET['password']))
+	if (isset($_POST['password']) & !empty($_POST['password']))
 	{
-		$password = $_GET['password'];
+		$password = $_POST['password'];
 	}
 
 	//calls the login function

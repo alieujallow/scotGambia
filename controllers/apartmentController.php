@@ -1,14 +1,14 @@
 <?php
 
 //includes the datbase class
-require_once('../classes/staff.php');
+require_once('../classes/apartment.php');
 
-//adds a staff to the system
+//adds a an apartment to the system
 if (isset($_POST['action']) & !empty($_POST['action']))
 {
     //gets the form data and the action
     $action = $_POST['action'];
-    $name = $_POST['name'];
+    $apartmentName = $_POST['name'];
     $houseType = $_POST['houseType'];
     $condition = $_POST['condition'];
     $location = $_POST["location"];
@@ -17,12 +17,27 @@ if (isset($_POST['action']) & !empty($_POST['action']))
     $price = $_POST["price"];
     $numberOfBedRooms = $_POST["numberOfBedrooms"];
 
+    //gets the user id
+    session_start();
+    $userId=$_SESSION['userid'];
+
+    //sets the sql
+    /*$sql="INSERT INTO apartment(user_id,property_status_id,house_type_id,name,condition_id,property_type_id,location_id,price,number_of_bedrooms,picture) 
+        VALUES('$userId','$propertyStatus','$houseType ','$name','$condition','$propertyType','$location','$price','$numberOfBedRooms')";*/
+
     //checks whether the user wants to edit or add staff information
     if ($action=="add_apartment")
     {
-        //creates a staff class
-        $staff = new Staff;
+        //creates an apartment class
+        $apartment = new Apartment;
+        /*if ($result)
+        {
+            $lastApartmentId = $apartment->getLastApartmentInsertedId();
+        }*/
+
+        //creates the target directory
         $target_dir = "../img/apartment_uploads/";
+
         $count = count($_FILES['arr']['name']);
         for ($i = 0; $i < $count; $i++)
         { 
@@ -40,7 +55,18 @@ if (isset($_POST['action']) & !empty($_POST['action']))
             $j++;
             $name[$i] = $parts["filename"] . "-" . $j. "." . $parts["extension"];
           }
-          move_uploaded_file($tempName[$i], $target_dir.$name[$i]);
+
+          //$sql="INSERT INTO apartment_uploads(apartment_id,name) VALUES('$lastApartmentId','$name[$i]')";
+
+          //sets the sql
+         $sql="INSERT INTO apartment(user_id,property_status_id,house_type_id,name,condition_id,property_type_id,location_id,price,number_of_bedrooms,picture) 
+         VALUES('$userId','$propertyStatus','$houseType ','$apartmentName','$condition','$propertyType','$location','$price','$numberOfBedRooms','$name[$i]')";
+
+          $result= $apartment->apartmentQuery($sql);
+          if ($result)
+          {
+             move_uploaded_file($tempName[$i], $target_dir.$name[$i]);
+          }
         }
         echo "apartment_added";
     }
@@ -103,18 +129,19 @@ elseif (isset($_GET['emailPayroll']) & !empty($_GET['emailPayroll']))
     }
     echo json_encode($responseList);
 }
-elseif (isset($_GET['staff_info']) & !empty($_GET['staff_info']))
+//gets the information of all the apartments
+elseif (isset($_GET['apartment_info']) & !empty($_GET['apartment_info']))
 {
-	//sets the sql
-	$sql="SELECT id,first_name,middle_name,last_name,gender,designation,profile_pic FROM odg_staff WHERE status='ACTIVE'";
 
-	//creates a staff class
-  $staff = new Staff;
+    //sets the sql
+    $sql="SELECT apartment.id as apartment_id,apartment.picture, apartment.name as apartment_name, price,number_of_bedrooms,location.name as location_name, property_condition.name as condition_name FROM apartment,location,property_condition WHERE location.id=apartment.location_id AND property_condition.id=apartment.condition_id";
 
-  //gets the rows of all the staff
-  $rows = $staff->getStaffInfo($sql);
+    //creates an apartment Object
+    $apartment = new Apartment;
 
-  echo json_encode($rows);
+    //gets the rows of all the apartments
+    $rows = $apartment->getApartmentInfo($sql);
+    echo json_encode($rows);
 }
 elseif (isset($_GET['search']) & !empty($_GET['search']))
 {
@@ -165,38 +192,26 @@ elseif (isset($_GET['search']) & !empty($_GET['search']))
     $rows = $staff->getStaffInfo($sql);
     echo json_encode($rows);
 }
-elseif (isset($_GET['staffId']) & !empty($_GET['staffId']))
+
+//creates a session for the apartment id
+elseif (isset($_GET['apartmentId']) & !empty($_GET['apartmentId']))
 {
     session_start();
-    $_SESSION['staff_id'] = $_GET['staffId'];
-    echo "staff_id_stored";
+    $_SESSION['apartment_id'] = $_GET['apartmentId'];
+    echo "apartment_id_stored";
 }
-elseif (isset($_GET['staff_profile_information']) & !empty($_GET['staff_profile_information']))
+elseif (isset($_GET['apartment_profile_information']) & !empty($_GET['apartment_profile_information']))
 {
+    //gets the apartment id
     session_start();
-    $staffId = $_SESSION['staff_id'];
+    $apartmentId = $_SESSION['apartment_id'];
 
-    //sets the sql
-    $sql1="SELECT *FROM odg_staff WHERE status='ACTIVE' AND id='$staffId'";
-    $sql2="SELECT name FROM unit, odg_staff WHERE odg_staff.unit_id=unit.id AND odg_staff.id='$staffId'";
-    $sql3="SELECT name FROM region, odg_staff WHERE odg_staff.region_id=region.id AND odg_staff.id='$staffId'";
-    $sql4="SELECT name FROM qualification, odg_staff WHERE odg_staff.qualification_id=qualification.id AND odg_staff.id='$staffId'";
-    $sql5="SELECT name FROM other_section, odg_staff WHERE odg_staff.other_section_id=other_section.id AND odg_staff.id='$staffId'";
+     $sql="SELECT apartment.id as apartment_id,apartment.picture, apartment.name as apartment_name, price,number_of_bedrooms,location.name as location_name, property_condition.name as condition_name,property_type.name as property_type,property_status.name as property_status, house_type.name as house_type FROM apartment,location,property_condition,property_type,property_status,house_type WHERE apartment.id='$apartmentId' AND location.id=apartment.location_id AND property_condition.id=apartment.condition_id AND property_type.id=apartment.property_type_id AND property_status.id=apartment.property_status_id AND house_type.id=apartment.house_type_id";
 
-    //creates a staff class
-    $staff = new Staff;
+    //creates an apartment object
+    $apartment = new Apartment;
 
-    //creates an array
-    $data = array();
-    //gets the rows of all the staff
-    $staffRow = $staff->getStaffInfo($sql1);
-    $unitName = $staff->getStaffInfo($sql2);
-    $regionName= $staff->getStaffInfo($sql3);
-    $qualificationName= $staff->getStaffInfo($sql4);
-    $otherSectionName= $staff->getStaffInfo($sql5);
-
-    $data = array($staffRow,$unitName,$regionName,$qualificationName,$otherSectionName);
-
-    echo json_encode($data);
+    $rows = $apartment->getApartmentInfo($sql);
+    echo json_encode($rows);
 }
 ?>

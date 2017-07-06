@@ -3,12 +3,12 @@
 * this is a staff class that handles everything  about a staff
 */
 require('../database/dbConnection.php');
-class Staff extends Dbconnection
+class Apartment extends Dbconnection
 {
 	
 	
 	//adds a staff
-	function staffQuery($sql)
+	function apartmentQuery($sql)
 	{
 		return $this->query($sql);
 	}
@@ -23,7 +23,7 @@ class Staff extends Dbconnection
 	}
 
 	//gets the staff summary data
-	function getStaffInfo($sql)
+	function getApartmentInfo($sql)
 	{
 		if($this->query($sql))
 		{
@@ -46,7 +46,7 @@ class Staff extends Dbconnection
 	}
 
 	//gets the last inserted id of a staff
-	function getLastStaffInsertedId()
+	function getLastApartmentInsertedId()
 	{
 		return $this->getLastInsertedId();
 	}

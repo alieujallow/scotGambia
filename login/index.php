@@ -36,7 +36,7 @@
           <div id="logoContainer">
             <h1> SCOT GAMBIA</h1>
           </div>
-          <form name="loginForm" onsubmit="return validateLoginForm()" action="" method="post">
+          <form name="loginForm" onsubmit="return validateLoginForm()" action="" method="post" id="loginForm">
             <div class="form-group">
               <label>Username</label>
               <input type="text" class="form-control" id="username" placeholder="Username" name="username">

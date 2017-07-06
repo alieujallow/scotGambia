@@ -116,7 +116,9 @@
           </div>
           </div>
           <div class="row">
-            <input type="file" name="file[]" class="form-control" id="picture_picker" multiple><span id="pic_span" style="color: red;"></span>
+             <!-- <input type="file" name="file[]" class="form-control" id="picture_picker" multiple>-->
+             <input type="file" name="file" class="form-control" id="picture_picker">
+            <span id="pic_span" style="color: red;"></span>
             <br>
             <button type="submit" class="btn btn-success form-control">Save</button> 
           </div>
